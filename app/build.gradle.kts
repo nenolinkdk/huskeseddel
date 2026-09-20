@@ -1,3 +1,6 @@
+import com.android.build.api.artifact.SingleArtifact
+import java.io.File
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
@@ -29,6 +32,34 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+base {
+    archivesName.set("Huskeseddel")
+}
+
+androidComponents {
+    onVariants(selector().withBuildType("release")) { variant ->
+        val capitalized = variant.name.replaceFirstChar { it.uppercaseChar() }
+        val apkFolder = variant.artifacts.get(SingleArtifact.APK)
+        val artifactsLoader = variant.artifacts.getBuiltArtifactsLoader()
+        val copyTask = tasks.register("copyNamed${capitalized}Apk") {
+            description = "Copies the release APK to Huskeseddel.apk"
+            inputs.files(apkFolder)
+            val output = layout.buildDirectory.file("outputs/apk/release/Huskeseddel.apk")
+            outputs.file(output)
+            doLast {
+                val built = artifactsLoader.load(apkFolder.get()) ?: error("Cannot load APKs")
+                val source = File(built.elements.single().outputFile)
+                val target = output.get().asFile
+                target.parentFile.mkdirs()
+                source.copyTo(target, overwrite = true)
+            }
+        }
+        tasks.matching { it.name == "assemble$capitalized" }.configureEach {
+            finalizedBy(copyTask)
+        }
     }
 }
 

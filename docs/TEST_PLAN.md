@@ -13,6 +13,7 @@
 - "Nyt indkøb"
 - note persisteres
 - quantity kan ikke være mindre end 1
+- delingstekst indeholder kategorier, varenavne, antal og note
 
 ## UI tests
 
@@ -31,6 +32,9 @@
 - danske tegn vises korrekt
 - telefonrotation må ikke give datatab
 - app fungerer uden netværk
+- deleknap sender aktuel huskeseddel som tekst
+- dobbelttryk på varenavn læser navnet højt og ændrer ikke købt-status
+- købt vare vises med rød tekst uden gennemstregning
 
 ## Release gate
 

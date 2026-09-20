@@ -1,10 +1,14 @@
 package com.nenolink.huskeseddel
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
@@ -24,7 +27,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -36,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
@@ -46,7 +49,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -54,8 +58,10 @@ import com.nenolink.huskeseddel.data.CustomProductEntity
 import com.nenolink.huskeseddel.data.Product
 import com.nenolink.huskeseddel.data.ProductCategory
 import com.nenolink.huskeseddel.data.ShoppingItemEntity
+import com.nenolink.huskeseddel.data.formatShoppingListText
 import com.nenolink.huskeseddel.ui.HuskeseddelUiState
 import com.nenolink.huskeseddel.ui.HuskeseddelViewModel
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,9 +83,19 @@ fun HuskeseddelApp(viewModel: HuskeseddelViewModel = viewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     var destinationName by rememberSaveable { mutableStateOf(Destination.Products.name) }
     val destination = Destination.valueOf(destinationName)
+    val context = LocalContext.current
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(destination.title) }) },
+        topBar = {
+            TopAppBar(
+                title = { Text(destination.title) },
+                actions = {
+                    if (destination == Destination.Shopping) {
+                        TextButton(onClick = { shareShoppingList(context, state) }) { Text("Del") }
+                    }
+                },
+            )
+        },
         bottomBar = {
             NavigationBar {
                 Destination.entries.forEach { item ->
@@ -99,6 +115,19 @@ fun HuskeseddelApp(viewModel: HuskeseddelViewModel = viewModel()) {
             Destination.Settings -> SettingsScreen(Modifier.padding(padding))
         }
     }
+}
+
+private fun shareShoppingList(context: Context, state: HuskeseddelUiState) {
+    val text = formatShoppingListText(
+        items = state.shoppingItems,
+        categoryNames = state.allCategories.associate { it.id to it.name },
+        note = state.note,
+    )
+    val send = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, text)
+    }
+    context.startActivity(Intent.createChooser(send, "Del huskeseddel"))
 }
 
 @Composable
@@ -224,6 +253,7 @@ private fun ShoppingScreen(state: HuskeseddelUiState, viewModel: HuskeseddelView
     val categoryNames = state.allCategories.associate { it.id to it.name }
     var note by rememberSaveable { mutableStateOf(state.note) }
     LaunchedEffect(state.note) { if (state.note != note) note = state.note }
+    val speakItemName = rememberItemTts()
 
     Column(modifier.fillMaxSize().padding(horizontal = 16.dp)) {
         OutlinedTextField(
@@ -244,7 +274,7 @@ private fun ShoppingScreen(state: HuskeseddelUiState, viewModel: HuskeseddelView
                         modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
                     )
                 }
-                items(entries, key = { it.productKey }) { item -> ShoppingRow(item, viewModel) }
+                items(entries, key = { it.productKey }) { item -> ShoppingRow(item, viewModel, speakItemName) }
             }
             if (state.shoppingItems.isEmpty()) item { Text("Din huskeseddel er tom.", modifier = Modifier.padding(vertical = 24.dp)) }
         }
@@ -256,15 +286,28 @@ private fun ShoppingScreen(state: HuskeseddelUiState, viewModel: HuskeseddelView
 }
 
 @Composable
-private fun ShoppingRow(item: ShoppingItemEntity, viewModel: HuskeseddelViewModel) {
+private fun rememberItemTts(): (String) -> Unit {
+    val context = LocalContext.current
+    val tts = remember { ItemTts(context.applicationContext) }
+    DisposableEffect(tts) {
+        onDispose { tts.shutdown() }
+    }
+    return remember(tts) { { name -> tts.speak(name) } }
+}
+
+@Composable
+private fun ShoppingRow(item: ShoppingItemEntity, viewModel: HuskeseddelViewModel, onSpeakName: (String) -> Unit) {
     Column {
-        Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Checkbox(checked = item.purchased, onCheckedChange = { viewModel.setPurchased(item, it) })
             Text(
                 item.displayName,
-                modifier = Modifier.weight(1f),
-                textDecoration = if (item.purchased) TextDecoration.LineThrough else null,
-                color = if (item.purchased) MaterialTheme.colorScheme.onSurfaceVariant else Color.Unspecified,
+                modifier = Modifier
+                    .weight(1f)
+                    .pointerInput(item.productKey, item.displayName) {
+                        detectTapGestures(onDoubleTap = { onSpeakName(item.displayName) })
+                    },
+                color = if (item.purchased) Color.Red else Color.Unspecified,
             )
             TextButton(onClick = { viewModel.changeQuantity(item, -1) }) { Text("−") }
             Text(item.quantity.toString())
@@ -297,4 +340,43 @@ private fun HuskeseddelTheme(content: @Composable () -> Unit) {
         ),
         content = content,
     )
+}
+
+private class ItemTts(context: Context) {
+    @Volatile private var ready = false
+    private lateinit var tts: TextToSpeech
+
+    init {
+        tts = TextToSpeech(context) { status ->
+            if (status != TextToSpeech.SUCCESS) return@TextToSpeech
+            try {
+                if (::tts.isInitialized) {
+                    tts.setLanguage(Locale.forLanguageTag("da-DK"))
+                }
+            } catch (_: Exception) {
+                // Continue without Danish TTS rather than crashing.
+            }
+            ready = true
+        }
+    }
+
+    fun speak(text: String) {
+        if (!ready || text.isBlank() || !::tts.isInitialized) return
+        try {
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, "huskeseddel-item")
+        } catch (_: Exception) {
+            // Missing engine or language must not crash the app.
+        }
+    }
+
+    fun shutdown() {
+        ready = false
+        if (!::tts.isInitialized) return
+        try {
+            tts.stop()
+            tts.shutdown()
+        } catch (_: Exception) {
+            // Ignore release errors from a missing or already shut-down engine.
+        }
+    }
 }

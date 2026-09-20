@@ -11,6 +11,11 @@
 - Lokal Room-lagring af egne varer, aktiv liste og note
 - Tilføjelse, redigering og sletning af egne varer
 - Om-, versions- og lokal datalagringstekst
+- Deling af aktuel huskeseddel som ren tekst via Android ACTION_SEND (kategorier, varenavne, antal og note)
+- Kompakt vareliste på Huskeseddel med uændret checkbox-trykflade
+- Købte varer vises med rød tekst uden gennemstregning
+- Dobbelttryk på varenavn læser navnet højt med Android TTS (da-DK); mangler dansk stemme uden crash
+- APK-navne: `Huskeseddel-debug.apk` (debug) og `Huskeseddel.apk` (release)
 
 ## Verifikation
 
