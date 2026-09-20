@@ -1,0 +1,155 @@
+{
+  "categories": [
+    {
+      "id": "broed",
+      "name": "Brød",
+      "items": [
+        {"id":"franskbroed","name":"Franskbrød"},
+        {"id":"rundstykker","name":"Rundstykker"},
+        {"id":"rundstykker_frosne","name":"Rundstykker, frosne"},
+        {"id":"croissant_frosne","name":"Croissant frosne"},
+        {"id":"rugbroed_solsikke","name":"Rugbrød, solsikke"},
+        {"id":"knaekbroed","name":"Knækbrød"},
+        {"id":"bondebroed","name":"Bondebrød"},
+        {"id":"kanelsnegle","name":"Kanelsnegle"}
+      ]
+    },
+    {
+      "id": "maelkeprodukter",
+      "name": "Mælkeprodukter",
+      "items": [
+        {"id":"youghurt","name":"Youghurt"},
+        {"id":"smoer","name":"Smør"},
+        {"id":"maelk","name":"Mælk"},
+        {"id":"gul_ost_kommen","name":"Gul ost, kommen"},
+        {"id":"brie","name":"Brie"},
+        {"id":"baconost","name":"Baconost"},
+        {"id":"revet_ost_pizza","name":"Revet ost til pizza"}
+      ]
+    },
+    {
+      "id": "frugt",
+      "name": "Frugt",
+      "items": [
+        {"id":"bananer","name":"Bananer"},
+        {"id":"aebler_roede","name":"Æbler røde"},
+        {"id":"vandmelon","name":"Vandmelon"},
+        {"id":"honningmelon","name":"Honningmelon"},
+        {"id":"roede_vindruer","name":"Røde vindruer"},
+        {"id":"groenne_vindruer","name":"Grønne vindruer"},
+        {"id":"mango","name":"Mango"},
+        {"id":"blommer","name":"Blommer"},
+        {"id":"fersken_nektariner","name":"Fersken/nektariner"}
+      ]
+    },
+    {
+      "id": "koed",
+      "name": "Kød",
+      "items": [
+        {"id":"hakket_oksekoed","name":"Hakket oksekød"},
+        {"id":"kyllingfilet","name":"Kyllingfilet"},
+        {"id":"poelser","name":"Pølser"},
+        {"id":"svinefars","name":"Svinefars"},
+        {"id":"oksekoed_tern","name":"Oksekød i tern"},
+        {"id":"bacon_skiver","name":"Bacon skiver"},
+        {"id":"laks","name":"Laks"},
+        {"id":"rejer","name":"Rejer"}
+      ]
+    },
+    {
+      "id": "paalaeg",
+      "name": "Pålæg",
+      "items": [
+        {"id":"syltetoej","name":"Syltetøj"},
+        {"id":"honning","name":"Honning"},
+        {"id":"kyllingepaalaeg","name":"Kyllingepålæg"},
+        {"id":"jordnoeddesmoer","name":"Jordnøddesmør"},
+        {"id":"bacon_paalaeg","name":"Bacon"},
+        {"id":"faerdig_pizza","name":"Færdig pizza"}
+      ]
+    },
+    {
+      "id": "snacks",
+      "name": "Snacks",
+      "items": [
+        {"id":"trefarvet_is","name":"Trefarvet is"},
+        {"id":"chips","name":"Chips"},
+        {"id":"rosiner","name":"Rosiner"},
+        {"id":"jordnoedder","name":"Jordnødder"},
+        {"id":"chokoladekiks","name":"Chokoladekiks"},
+        {"id":"riskiks_lidl","name":"Riskiks (Lidl)"}
+      ]
+    },
+    {
+      "id": "groentsager",
+      "name": "Grøntsager",
+      "items": [
+        {"id":"guleroedder","name":"Gulerødder"},
+        {"id":"kartofler","name":"Kartofler"},
+        {"id":"bagekartofler","name":"Bagekartofler"},
+        {"id":"roedloeg_smaa","name":"Rødløg små"},
+        {"id":"alm_loeg","name":"Alm løg"},
+        {"id":"hvidloeg","name":"Hvidløg"},
+        {"id":"avocado","name":"Avocado"},
+        {"id":"porrer","name":"Porrer"},
+        {"id":"tomater","name":"Tomater"},
+        {"id":"agurk","name":"Agurk"},
+        {"id":"salat","name":"Salat"},
+        {"id":"citron","name":"Citron"}
+      ]
+    },
+    {
+      "id": "drikkevarer",
+      "name": "Drikkevarer",
+      "items": [
+        {"id":"smaa_aeblejuice","name":"Små æblejiuce"},
+        {"id":"smaa_blandet_juice","name":"Små blandet juice"},
+        {"id":"juice_1_liter","name":"Juice 1 liter"},
+        {"id":"cola","name":"Cola"},
+        {"id":"roedvin","name":"Rødvin"},
+        {"id":"hvidvin","name":"Hvidvin"},
+        {"id":"rosevin","name":"Rosévin"}
+      ]
+    },
+    {
+      "id": "tilbehoer",
+      "name": "Tilbehør",
+      "items": [
+        {"id":"rapsolie","name":"Rapsolie"},
+        {"id":"olivenolie","name":"Olivenolie"},
+        {"id":"balsamico_eddike","name":"Balsamico-eddike"},
+        {"id":"muesli","name":"Müsli"},
+        {"id":"nudler_smaa_gule_pakker","name":"Nudler, små gule pakker"},
+        {"id":"syltede_agurker","name":"Syltede agurker"},
+        {"id":"soyasauce","name":"Soyasauce"},
+        {"id":"kaffe","name":"Kaffe"},
+        {"id":"te_earl_grey","name":"Te Earl grey"},
+        {"id":"kokosmaelk","name":"Kokosmælk"},
+        {"id":"tomatsovs","name":"Tomatsovs"}
+      ]
+    },
+    {
+      "id": "praktiske_ting",
+      "name": "Praktiske ting",
+      "items": [
+        {"id":"stanniol","name":"Stanniol"},
+        {"id":"bagepapir_ark","name":"Bagepapir ark"},
+        {"id":"skraldeposer_hvide","name":"Skraldeposer hvide 15 el. 30 liter"},
+        {"id":"fryseposer_4l","name":"Fryseposer 4l"}
+      ]
+    },
+    {
+      "id": "saebe_og_andet",
+      "name": "Sæbe og andet",
+      "items": [
+        {"id":"shampoo_dove","name":"Shampoo Dove"},
+        {"id":"shampoo_henrik","name":"Shampoo Henrik"},
+        {"id":"haandsaebe","name":"Håndsæbe"},
+        {"id":"opvaskemiddel","name":"Opvaskemiddel"},
+        {"id":"vaskemiddel_kuloert","name":"Vaskemiddel kulørt"},
+        {"id":"tandpasta","name":"Tandpasta"},
+        {"id":"junior_tandpasta","name":"Junior-tandpasta"}
+      ]
+    }
+  ]
+}
